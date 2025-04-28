@@ -9,7 +9,7 @@ function App() {
     fetch(`${API_URL}/tasks`)
     .then((res) => res.json())
           .then((data) => {
-            data.sort((a, b) => b.score - a.score);
+            data.sort((a, b) => a.score - b.score);
             setTasks(data);
           });
     }, []);
@@ -42,7 +42,7 @@ function App() {
                      .then((newTask) => {
                        setTasks((prev) => {
                          const updated = [...prev, newTask];
-                         updated.sort((a, b) => b.score - a.score);
+                         updated.sort((a, b) => a.score - b.score);
                          return updated;
                        });
                        e.target.reset();
