@@ -7,9 +7,12 @@ function App() {
 
   useEffect(() => {
     fetch(`${API_URL}/tasks`)
-      .then((res) => res.json())
-      .then(setTasks);
-  }, []);
+    .then((res) => res.json())
+          .then((data) => {
+            data.sort((a, b) => b.score - a.score);
+            setTasks(data);
+          });
+    }, []);
 
   return (
     <div className="container">
@@ -35,11 +38,15 @@ function App() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
           })
-            .then((r) => r.json())
-            .then((newTask) => {
-              setTasks((t) => [...t, newTask]);
-              e.target.reset();
-            });
+          .then((r) => r.json())
+                     .then((newTask) => {
+                       setTasks((prev) => {
+                         const updated = [...prev, newTask];
+                         updated.sort((a, b) => b.score - a.score);
+                         return updated;
+                       });
+                       e.target.reset();
+                     });
         }}
       >
         {[
