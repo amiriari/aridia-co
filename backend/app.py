@@ -13,7 +13,11 @@ def generate_task_id():
 def calculate_score(priority, motivation, days_left):
     reversed_p = 6 - priority
     reversed_m = 6 - motivation
-    return round((0.35 * reversed_p + 0.30 * reversed_m + 0.45 * days_left) / 3, 2)
+
+    dl = max(1, min(days_left, 5))
+
+    raw = 0.35 * reversed_p + 0.30 * reversed_m + 0.45 * dl
+    return round(raw / 3, 2)
 
 @app.route("/add_task", methods=["POST"])
 def add_task():
