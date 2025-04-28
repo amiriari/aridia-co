@@ -5,6 +5,23 @@ import "./App.css";
 function App() {
   const [tasks, setTasks] = useState([]);
 
+  const deleteTask = (id) => {
+    fetch(`${API_URL}/delete_task/${id}`, { method: "DELETE" })
+      .then(() => {
+        setTasks((prev) => prev.filter((t) => t.id !== id));
+      });
+  };
+  
+  const toggleStatus = (id) => {
+    fetch(`${API_URL}/toggle_status/${id}`, { method: "PATCH" })
+      .then((res) => res.json())
+      .then((updated) => {
+        setTasks((prev) =>
+          prev.map((t) => (t.id === updated.id ? updated : t))
+        );
+      });
+  };
+
   useEffect(() => {
     fetch(`${API_URL}/tasks`)
     .then((res) => res.json())
@@ -83,6 +100,21 @@ function App() {
               <p>Priority: {t.priority}, Motivation: {t.motivation}, Days Left: {t.days_left}</p>
               {t.group && <p>Group: {t.group}</p>}
               {t.sub_tasks.length > 0 && <p>Subtasks: {t.sub_tasks.join(", ")}</p>}
+
+              <div className="task-actions">
+               <button
+        className="complete-btn"
+        onClick={() => toggleStatus(t.id)}
+      >
+        {t.status === "Incomplete" ? "Mark Complete" : "Mark Incomplete"}
+      </button>
+      <button
+        className="delete-btn"
+        onClick={() => deleteTask(t.id)}
+      >
+        Delete
+      </button>
+   </div>
             </li>
           ))
         )}
