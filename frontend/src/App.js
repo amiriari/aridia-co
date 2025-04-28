@@ -1,3 +1,4 @@
+const API_URL = process.env.REACT_APP_API_URL || "";
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
@@ -5,7 +6,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    fetch("/tasks")
+    fetch(`${API_URL}/tasks`)
       .then((res) => res.json())
       .then(setTasks);
   }, []);
@@ -29,7 +30,7 @@ function App() {
               .map((s) => s.trim())
           };
 
-          fetch("/add_task", {
+          fetch(`${API_URL}/add_task`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
