@@ -102,18 +102,24 @@ function App() {
               {t.sub_tasks.length > 0 && <p>Subtasks: {t.sub_tasks.join(", ")}</p>}
 
               <div className="task-actions">
-               <button
-        className="complete-btn"
-        onClick={() => toggleStatus(t.id)}
-      >
-        {t.status === "Incomplete" ? "Mark Complete" : "Mark Incomplete"}
-      </button>
-      <button
-        className="delete-btn"
-        onClick={() => deleteTask(t.id)}
-      >
-        Delete
-      </button>
+              <button
+  className="complete-btn"
+  onClick={() => toggleStatus(t.id)}
+  aria-label={
+    t.status === "Incomplete"
+      ? "Complete task"
+      : "Undo complete"
+  }
+>
+  {t.status === "Incomplete" ? "✓" : "↺"}
+</button>
+<button
+  className="delete-btn"
+  onClick={() => deleteTask(t.id)}
+  aria-label="Delete task"
+>
+  Delete
+</button>
    </div>
             </li>
           ))

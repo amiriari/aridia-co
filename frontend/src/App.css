@@ -99,15 +99,12 @@ body {
   }
   
   .task-actions button {
-    flex: none;
-    padding: 6px 12px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: opacity 0.2s ease;
+    flex: none;           /* no auto-stretch */
+    width: auto;          /* fit to text/icon */
+    white-space: nowrap;  /* no wrapping */
+    padding: 4px 8px;     /* nice tight padding */
+    font-size: 0.8rem;    /* small but legible */
+    line-height: 1;
   }
   
   .task-actions .complete-btn {
