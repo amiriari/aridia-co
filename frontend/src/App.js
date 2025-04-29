@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  const [tasks, setTasks] = useState([]);
+    const [tab, setTab] = useState("Active");
 
   const deleteTask = (id) => {
     fetch(`${API_URL}/delete_task/${id}`, { method: "DELETE" })
@@ -31,9 +31,26 @@ function App() {
           });
     }, []);
 
+    const filtered = tasks.filter((t) =>
+            tab === "Active" ? t.status !== "Archived" : t.status === "Archived"
+          );
+
   return (
     <div className="container">
-      <h1>Aridia To-Do List</h1>
+      <h1>Aridia</h1>
+
+      {/* Tab selector */}
+      <div className="tabs">
+        {["Active", "Archived"].map((name) => (
+          <button
+            key={name}
+            className={tab === name ? "tab active" : "tab"}
+          onClick={() => setTab(name)}
+          >
+            {name}
+          </button>
+        ))}
+      </div>
 
       <form
         onSubmit={(e) => {
@@ -43,7 +60,7 @@ function App() {
             title: data.get("title"),
             priority: data.get("priority"),
             motivation: data.get("motivation"),
-            days_left: data.get("days_left"),
+            date_due: data.get("date_due"),
             group: data.get("group"),
             sub_tasks: data.get("sub_tasks")
               .split(",")
@@ -67,13 +84,13 @@ function App() {
         }}
       >
         {[
-          { name: "title", label: "Task Title", type: "text", placeholder: "Enter task…" },
-          { name: "priority", label: "Priority (1-5)", type: "number", defaultValue: 1 },
-          { name: "motivation", label: "Motivation (1-5)", type: "number", defaultValue: 1 },
-          { name: "days_left", label: "Days Left", type: "number", defaultValue: 1 },
-          { name: "group", label: "Group", type: "text", placeholder: "e.g. Work, School" },
-          { name: "sub_tasks", label: "Subtasks (comma-separated)", type: "text" }
-        ].map(({ name, label, type, defaultValue, placeholder }) => (
+                      { name: "title", label: "Task Title", type: "text", placeholder: "Enter task…" },
+                      { name: "priority", label: "Priority (1-5)", type: "number", defaultValue: 1 },
+                      { name: "motivation", label: "Motivation (1-5)", type: "number", defaultValue: 1 },
+                      { name: "date_due", label: "Due Date", type: "date" },
+                      { name: "group", label: "Group", type: "text", placeholder: "e.g. Work, School" },
+                      { name: "sub_tasks", label: "Subtasks (comma-separated)", type: "text" }
+                    ].map(({ name, label, type, defaultValue, placeholder }) => (
           <div className="form-group" key={name}>
             <label htmlFor={name}>{label}</label>
             <input
@@ -90,14 +107,17 @@ function App() {
       </form>
 
       <ul className="task-list">
-        {tasks.length === 0 ? (
+        {filtered.length === 0 ? (
           <p>No tasks added yet.</p>
         ) : (
-          tasks.map((t) => (
+          filtered.map((t) => (
             <li className="task-card" key={t.id}>
               <p><strong>{t.title}</strong></p>
               <p>Score: {t.score} | Status: {t.status}</p>
-              <p>Priority: {t.priority}, Motivation: {t.motivation}, Days Left: {t.days_left}</p>
+              <p>
+                Priority: {t.priority}, Motivation: {t.motivation},
+                Due: {t.date_due} ({t.days_left} days left)
+              </p>
               {t.group && <p>Group: {t.group}</p>}
               {t.sub_tasks.length > 0 && <p>Subtasks: {t.sub_tasks.join(", ")}</p>}
 
